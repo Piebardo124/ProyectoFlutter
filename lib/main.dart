@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:proyecto_flutter/providers/auth_provider.dart';
+import 'package:proyecto_flutter/providers/cart_provider.dart';
+import 'package:proyecto_flutter/providers/products_provider.dart';
+import 'package:proyecto_flutter/screens/auth/login_screen.dart';
+import 'package:proyecto_flutter/screens/splash/splash_screen.dart';
 import 'firebase_options.dart';
-// Importa tu nueva pantalla de carga
-import 'package:proyecto_flutter/screens/splash/splash_screen.dart'; // <-- Ajusta esta ruta
+//import 'package:provider/provider.dart';
 
 void main() async {
-  // Esto ya lo tenías, está perfecto
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => ProductsProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -17,14 +31,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'BurgerApp', // Puedes cambiar el título
+      title: 'Hamburguesas el Mesias',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      // Aquí está el cambio:
-      // Inicia en la pantalla de carga, no en la de login directamente.
       home: const SplashScreen(),
     );
   }

@@ -3,7 +3,8 @@ import 'package:proyecto_flutter/services/auth_service.dart';
 
 import 'package:proyecto_flutter/screens/auth/register_screen.dart';
 import 'package:proyecto_flutter/screens/auth/forgot_password_screen.dart';
-//import 'package:proyecto_flutter/screens/main_navigation_screen.dart';
+//import 'package:proyecto_flutter/screens/home_placeholder.dart';
+import 'package:proyecto_flutter/screens/main_navigation_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Controladores para el texto de email y contraseña
+  // Controles de texto y email.
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -22,11 +23,9 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
 
   Future<void> _signIn() async {
-    // Validar el formulario
     if (!_formKey.currentState!.validate()) {
       return;
     }
-
     setState(() {
       _isLoading = true;
     });
@@ -35,14 +34,19 @@ class _LoginScreenState extends State<LoginScreen> {
     final user = await _authService.signInWithEmailAndPassword(
       _emailController.text.trim(),
       _passwordController.text.trim(),
-      context, // Pasamos el context para mostrar SnackBars de error
+      context,
     );
 
     setState(() {
       _isLoading = false;
     });
 
-    // Si user es null, el auth_service ya mostró el error
+    if (user != null && mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
+        (route) => false,
+      );
+    }
   }
 
   @override
@@ -65,15 +69,10 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 60),
-                // Logo de tu app (Ej. una hamburguesa)
-                const Icon(
-                  Icons.fastfood, // Puedes cambiar esto por tu logo
-                  size: 100,
-                  color: Colors.amber, // Color de tu marca
-                ),
+                Image(image: AssetImage('assetName')),
                 const SizedBox(height: 20),
                 Text(
-                  'BurgerApp', // Nombre de tu restaurante
+                  'Hamburguesas el Mesias', // Nombre de tu restaurante
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 32,
@@ -82,7 +81,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 40),
-
                 // --- Campo de Email ---
                 TextFormField(
                   controller: _emailController,

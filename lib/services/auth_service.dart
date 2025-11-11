@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proyecto_flutter/models/user_model.dart';
 
 //Metodo de inicio de sesion con email y contraseña.
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<User?> signInWithEmailAndPassword(
     String email,
@@ -58,7 +61,23 @@ class AuthService {
         email: email,
         password: password,
       );
-      return result.user;
+      User? user = result.user;
+
+      if (user != null) {
+        UserModel newUser = UserModel(
+          id: user.uid,
+          email: user.email!,
+          displayName: '',
+          address: '',
+          phone: '',
+        );
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .set(newUser.toJson());
+      }
+
+      return user;
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
