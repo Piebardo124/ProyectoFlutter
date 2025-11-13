@@ -19,12 +19,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _isLoading = false;
 
   Future<void> _register() async {
-    // 1. Validar el formulario
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    // 2. Validar que las contraseñas coincidan
+    // Validador de contraseñas iguales
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -39,11 +38,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _isLoading = true;
     });
 
-    // 3. Llamar al servicio de autenticación
+    // Servicio de autentificacion
     final user = await _authService.registerWithEmailAndPassword(
       _emailController.text.trim(),
       _passwordController.text.trim(),
-      context, // Para mostrar errores desde el servicio
+      context,
     );
 
     setState(() {
@@ -51,14 +50,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     if (user != null) {
-      // 4. Éxito: Mostrar mensaje y volver al login
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('¡Registro exitoso! Ahora puedes iniciar sesión.'),
           backgroundColor: Colors.green,
         ),
       );
-      // Regresar a la pantalla de login
       Navigator.of(context).pop();
     }
   }
@@ -74,7 +71,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Usamos un AppBar para tener el botón de "atrás" automáticamente
       appBar: AppBar(
         title: const Text('Crear Cuenta'),
         backgroundColor: Colors.transparent,
@@ -103,7 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 40),
 
-              // --- Campo de Email ---
+              // Campo Email
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -121,7 +117,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 20),
 
-              // --- Campo de Contraseña ---
+              // Campo de contraseña
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
@@ -139,7 +135,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 20),
 
-              // --- Campo de Confirmar Contraseña ---
+              // Campo confirmacion contraseña
               TextFormField(
                 controller: _confirmPasswordController,
                 obscureText: true,
@@ -157,7 +153,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 30),
 
-              // --- Botón de Registro ---
+              // Boton de Registro
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ElevatedButton(

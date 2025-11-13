@@ -110,7 +110,7 @@ class CartProvider extends ChangeNotifier {
 
       await firestoreService.placeOrder(newOrder);
 
-      //Limpia carrito en caso de operacion Correcta
+      // Limpia carrito en caso de operacion Correcta
       clearCart();
     } catch (e) {
       print('Error en checkout: $e');

@@ -24,8 +24,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       _isLoading = true;
     });
 
-    // Llamar al servicio. El servicio mismo mostrará
-    // el SnackBar de éxito o error.
+    // Llamar al servicio de auntentificacion.
     await _authService.sendPasswordResetEmail(
       _emailController.text.trim(),
       context,
@@ -35,9 +34,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       _isLoading = false;
     });
 
-    // Opcional: regresar automáticamente al login
     if (mounted) {
-      // Comprobar que el widget sigue en pantalla
       Navigator.of(context).pop();
     }
   }
@@ -85,7 +82,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               const SizedBox(height: 40),
 
-              // --- Campo de Email ---
+              // Campo de Email
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -103,7 +100,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               const SizedBox(height: 30),
 
-              // --- Botón de Enviar ---
+              // Boton enviar
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ElevatedButton(

@@ -3,7 +3,6 @@ import 'package:proyecto_flutter/services/auth_service.dart';
 
 import 'package:proyecto_flutter/screens/auth/register_screen.dart';
 import 'package:proyecto_flutter/screens/auth/forgot_password_screen.dart';
-//import 'package:proyecto_flutter/screens/home_placeholder.dart';
 import 'package:proyecto_flutter/screens/main_navigation_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -69,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 60),
-                Image(image: AssetImage('assetName')),
+                const Icon(Icons.fastfood, size: 80, color: Colors.amber),
                 const SizedBox(height: 20),
                 Text(
                   'Hamburguesas el Mesias', // Nombre de tu restaurante
@@ -81,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                // --- Campo de Email ---
+                // Campo de email
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -101,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // --- Campo de Contraseña ---
+                // Campo de contraseña
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true, // Oculta la contraseña
@@ -119,13 +118,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 30),
 
-                // --- Botón de Inicio de Sesión ---
+                // Boton de inicio de sesison
                 _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Colors.deepPurple, // Color principal de tu app
+                          backgroundColor: Colors
+                              .deepPurple, // Color principal de app (modificar)
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -139,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                 const SizedBox(height: 20),
 
-                // --- Links a Registro y Olvido de Contraseña ---
+                // Redirigir a registro o olvido de contraseña
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -148,8 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Navegar a la pantalla de registro
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) =>
-                                const RegisterScreen(), // Asegúrate de crear este archivo
+                            builder: (context) => const RegisterScreen(),
                           ),
                         );
                       },
@@ -160,8 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Navegar a la pantalla de olvido de contraseña
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) =>
-                                const ForgotPasswordScreen(), // Asegúrate de crear este archivo
+                            builder: (context) => const ForgotPasswordScreen(),
                           ),
                         );
                       },

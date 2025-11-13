@@ -10,54 +10,42 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 1. Obtenemos el AuthProvider para saber QUÉ usuario está logueado
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final user = authProvider.user;
 
-    // 2. Instanciamos el servicio de Firestore
     final firestoreService = FirestoreService();
 
-    // Seguridad: si por alguna razón no hay usuario, muestra error
     if (user == null) {
       return const Scaffold(
         body: Center(child: Text('Error: No se pudo cargar el usuario.')),
       );
     }
-
-    // 3. Usamos un FutureBuilder para cargar los datos del perfil desde Firestore
     return Scaffold(
       appBar: AppBar(title: const Text('Mi Perfil')),
       body: FutureBuilder<UserModel?>(
-        // 4. Llamamos a la nueva función que añadimos en FirestoreService
         future: firestoreService.getUserData(user.uid),
         builder: (context, snapshot) {
-          // --- Estado de Carga ---
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // --- Estado de Error ---
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 
-          // --- Estado Sin Datos ---
           if (!snapshot.hasData || snapshot.data == null) {
             return const Center(
               child: Text('No se encontraron datos del perfil.'),
             );
           }
 
-          // --- Estado de Éxito ---
           final userModel = snapshot.data!;
 
           // Mostramos la información del usuario
           return Padding(
             padding: const EdgeInsets.all(24.0),
             child: ListView(
-              // Usamos ListView para que sea scrollable
               children: [
-                // --- Avatar e Info Principal ---
                 const Center(
                   child: CircleAvatar(
                     radius: 50,
@@ -66,7 +54,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
 
-                // --- Información del Perfil ---
+                // Informacion del perfil
                 _buildProfileTile(
                   icon: Icons.person_outline,
                   title: 'Nombre',
@@ -106,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
 
                 const Divider(height: 40),
 
-                // --- Botón de Cerrar Sesión ---
+                // Botton de cierre de sesion
                 ElevatedButton.icon(
                   icon: const Icon(Icons.logout),
                   label: const Text('Cerrar Sesión'),
@@ -116,7 +104,6 @@ class ProfileScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   onPressed: () async {
-                    // 5. Mover la lógica de logout aquí
                     await authProvider.signOut();
 
                     if (context.mounted) {
@@ -138,7 +125,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  /// Un widget helper para crear las filas de información
   Widget _buildProfileTile({
     required IconData icon,
     required String title,

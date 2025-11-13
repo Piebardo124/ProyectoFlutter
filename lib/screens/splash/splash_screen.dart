@@ -42,14 +42,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Esta es la pantalla de carga que el usuario ve
     return const Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.fastfood, //Icono de hambugueas
+              Icons.fastfood, // Cambiar por la imagen del cliente
               size: 100,
               color: Colors.amber,
             ),

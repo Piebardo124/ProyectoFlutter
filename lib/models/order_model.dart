@@ -62,7 +62,6 @@ class Order {
   factory Order.fromSnapshot(DocumentSnapshot snap) {
     Map<String, dynamic> data = snap.data() as Map<String, dynamic>;
 
-    // Convertimos la lista de mapas de Firebase a una lista de CartItems
     var itemsList = data['items'] as List<dynamic>? ?? [];
     List<CartItem> cartItems = itemsList
         .map((itemMap) => CartItem.fromMap(itemMap as Map<String, dynamic>))
@@ -70,11 +69,11 @@ class Order {
 
     return Order(
       id: snap.id,
-      userId: data['userId'] ?? '', // CORREGIDO
-      items: cartItems, // CORREGIDO
+      userId: data['userId'] ?? '',
+      items: cartItems,
       totalPrice: (data['totalPrice'] ?? 0.0).toDouble(),
-      timestamp: data['timestamp'] ?? Timestamp.now(), // CORREGIDO
-      status: data['status'] ?? 'Pendiente', // CORREGIDO
+      timestamp: data['timestamp'] ?? Timestamp.now(),
+      status: data['status'] ?? 'Pendiente',
     );
   }
 }
