@@ -34,6 +34,7 @@ class ProductsProvider extends ChangeNotifier {
     return _products.map((p) => p.category).toSet().toList()..sort();
   }
 
+  // Busca los productos en firebase
   Future<void> fetchProducts() async {
     _status = ProductStatus.loading;
     _error = null;

@@ -17,6 +17,7 @@ class CartProvider extends ChangeNotifier {
     return _items.length;
   }
 
+  // Calculo de precio total
   double get totalPrice {
     double total = 0.0;
     _items.forEach((key, cartItem) {

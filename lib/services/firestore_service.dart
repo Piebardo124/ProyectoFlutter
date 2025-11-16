@@ -6,6 +6,7 @@ import 'package:proyecto_flutter/models/user_model.dart';
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  // Obtener Productos
   Future<List<Product>> getProducts() async {
     try {
       QuerySnapshot snaphsot = await _db.collection('products').get();
@@ -17,6 +18,7 @@ class FirestoreService {
     }
   }
 
+  // Obtener Productos por categoria
   Future<List<Product>> getProductsByCategory(String category) async {
     try {
       QuerySnapshot snapshot = await _db
@@ -41,23 +43,7 @@ class FirestoreService {
     }
   }
 
-  Stream<List<Order>> getOrderHistory(String userId) {
-    try {
-      return _db
-          .collection('orders')
-          .where('userId', isEqualTo: userId)
-          .orderBy('timestamp', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) =>
-                snapshot.docs.map((doc) => Order.fromSnapshot(doc)).toList(),
-          );
-    } catch (e) {
-      print('Error al obtener historial de pedidos: $e');
-      return Stream.value([]);
-    }
-  }
-
+  // Obtener datos del usuario
   Future<UserModel?> getUserData(String userId) async {
     try {
       final DocumentSnapshot doc = await _db
@@ -74,6 +60,7 @@ class FirestoreService {
     }
   }
 
+  // Actualizar datos del usuario
   Future<void> updateUserData(String userId, Map<String, dynamic> data) async {
     try {
       await _db.collection('users').doc(userId).update(data);

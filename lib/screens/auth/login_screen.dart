@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_flutter/services/auth_service.dart';
-
+// import 'package:proyecto_flutter/services/auth_service.dart';
+import 'package:provider/provider.dart';
+import 'package:proyecto_flutter/providers/auth_provider.dart';
 import 'package:proyecto_flutter/screens/auth/register_screen.dart';
 import 'package:proyecto_flutter/screens/auth/forgot_password_screen.dart';
 import 'package:proyecto_flutter/screens/main_navigation_screen.dart';
@@ -17,30 +18,20 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final AuthService _authService = AuthService();
-
-  bool _isLoading = false;
 
   Future<void> _signIn() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    setState(() {
-      _isLoading = true;
-    });
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    // Llamar al servicio de autenticación
-    final user = await _authService.signInWithEmailAndPassword(
+    final success = await authProvider.signInWithEmail(
       _emailController.text.trim(),
       _passwordController.text.trim(),
       context,
     );
 
-    setState(() {
-      _isLoading = false;
-    });
-
-    if (user != null && mounted) {
+    if (success && mounted) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
         (route) => false,
@@ -57,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
     final logoAsset = isDarkMode
@@ -125,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 30),
 
                 // Boton de inicio de sesison
-                _isLoading
+                authProvider.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ElevatedButton(
                         onPressed: _signIn,

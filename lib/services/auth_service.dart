@@ -84,7 +84,6 @@ class AuthService {
             .doc(user.uid)
             .set(newUser.toJson());
       }
-
       return user;
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -120,6 +119,7 @@ class AuthService {
     }
   }
 
+  // Cerrar sesion
   Future<void> signOut() async {
     await _auth.signOut();
   }

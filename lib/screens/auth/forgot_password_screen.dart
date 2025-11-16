@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_flutter/services/auth_service.dart'; // <-- Asegúrate de que la ruta sea correcta
+// import 'package:proyecto_flutter/services/auth_service.dart';
+import 'package:provider/provider.dart';
+import 'package:proyecto_flutter/providers/auth_provider.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -11,30 +13,21 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final AuthService _authService = AuthService();
-
-  bool _isLoading = false;
 
   Future<void> _sendResetEmail() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     // Llamar al servicio de auntentificacion.
-    await _authService.sendPasswordResetEmail(
+    await authProvider.sendPasswordResetEmail(
       _emailController.text.trim(),
       context,
     );
 
-    setState(() {
-      _isLoading = false;
-    });
-
-    if (mounted) {
+    if (mounted && !authProvider.isLoading) {
       Navigator.of(context).pop();
     }
   }
@@ -47,6 +40,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Recuperar Contraseña')),
@@ -100,7 +94,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               const SizedBox(height: 30),
 
               // Boton enviar
-              _isLoading
+              authProvider.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ElevatedButton(
                       onPressed: _sendResetEmail,

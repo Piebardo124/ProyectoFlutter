@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:proyecto_flutter/services/auth_service.dart'; // <-- Asegúrate de que la ruta sea correcta
+import 'package:proyecto_flutter/services/auth_service.dart';
+import 'package:provider/provider.dart';
+import 'package:proyecto_flutter/providers/auth_provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -14,9 +16,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final AuthService _authService = AuthService();
-
-  bool _isLoading = false;
 
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) {
@@ -34,22 +33,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     // Servicio de autentificacion
-    final user = await _authService.registerWithEmailAndPassword(
+    final success = await authProvider.registerWithEmail(
       _emailController.text.trim(),
       _passwordController.text.trim(),
       context,
     );
 
-    setState(() {
-      _isLoading = false;
-    });
-
-    if (user != null) {
+    if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('¡Registro exitoso! Ahora puedes iniciar sesión.'),
@@ -70,6 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     final theme = Theme.of(context);
     final isDarkMode = theme.brightness == Brightness.dark;
     final logoAsset = isDarkMode
@@ -161,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 30),
 
               // Boton de Registro
-              _isLoading
+              authProvider.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ElevatedButton(
                       onPressed: _register,
