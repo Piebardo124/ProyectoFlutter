@@ -86,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               const SizedBox(height: 20),
               // Logo
-              const Icon(Icons.fastfood, size: 80, color: Colors.amber),
+              Image.asset('assets/images/icon.png', height: 100, width: 120),
               const SizedBox(height: 20),
               Text(
                 'Únete a BurgerApp',

@@ -73,4 +73,13 @@ class FirestoreService {
       return null;
     }
   }
+
+  Future<void> updateUserData(String userId, Map<String, dynamic> data) async {
+    try {
+      await _db.collection('users').doc(userId).update(data);
+    } catch (e) {
+      print('Error al actualizar datos del usuario: $e');
+      throw Exception('No se pudo actualizar el perfil.');
+    }
+  }
 }

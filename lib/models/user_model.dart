@@ -6,6 +6,12 @@ class UserModel {
   final String displayName;
   final String address;
   final String phone;
+  final String calle;
+  final String numExt;
+  final String numInt;
+  final String colonia;
+  final String ciudad;
+  final String estado;
 
   UserModel({
     required this.id,
@@ -13,6 +19,12 @@ class UserModel {
     this.displayName = '',
     this.address = '',
     this.phone = '',
+    this.calle = '',
+    this.numExt = '',
+    this.numInt = '',
+    this.colonia = '',
+    this.ciudad = '',
+    this.estado = '',
   });
 
   Map<String, dynamic> toJson() {
@@ -22,6 +34,12 @@ class UserModel {
       'displayName': displayName,
       'address': address,
       'phone': phone,
+      'calle': calle,
+      'numExt': numExt,
+      'numInt': numInt,
+      'colonia': colonia,
+      'ciudad': ciudad,
+      'estado': estado,
     };
   }
 
@@ -33,6 +51,12 @@ class UserModel {
       displayName: data['displayName'] ?? '',
       address: data['address'] ?? '',
       phone: data['phone'] ?? '',
+      calle: data['calle'] ?? '',
+      numExt: data['numExt'] ?? '',
+      numInt: data['numInt'] ?? '',
+      colonia: data['colonia'] ?? '',
+      ciudad: data['ciudad'] ?? '',
+      estado: data['estado'] ?? '',
     );
   }
 }

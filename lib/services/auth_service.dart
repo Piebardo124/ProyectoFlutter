@@ -35,6 +35,8 @@ class AuthService {
     switch (code) {
       case 'user-not-found':
         return 'No se encontró un usuario con ese email.';
+      case 'invalid-credential':
+        return 'Credenciales incorrectas. Revisa tu email y contraseña.';
       case 'wrong-password':
         return 'Contraseña incorrecta.';
       case 'invalid-email':
@@ -70,6 +72,12 @@ class AuthService {
           displayName: '',
           address: '',
           phone: '',
+          calle: '',
+          numExt: '',
+          numInt: '',
+          colonia: '',
+          ciudad: '',
+          estado: '',
         );
         await _firestore
             .collection('users')

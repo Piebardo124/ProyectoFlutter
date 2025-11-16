@@ -68,10 +68,10 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 60),
-                const Icon(Icons.fastfood, size: 80, color: Colors.amber),
+                Image.asset('assets/images/icon.png', height: 100, width: 120),
                 const SizedBox(height: 20),
                 Text(
-                  'Hamburguesas el Mesias', // Nombre de tu restaurante
+                  'RING BURGER', // Nombre de tu restaurante
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 32,
@@ -151,7 +151,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         );
                       },
-                      child: const Text('¿No tienes cuenta? Regístrate'),
+                      child: const Text(
+                        '¿No tienes cuenta? \n        Registrate',
+                      ),
                     ),
                     TextButton(
                       onPressed: () {

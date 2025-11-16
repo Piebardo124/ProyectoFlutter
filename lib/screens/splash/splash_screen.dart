@@ -2,9 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_flutter/screens/auth/login_screen.dart';
-//import 'package:proyecto_flutter/screens/home_placeholder.dart';
 import 'package:proyecto_flutter/screens/main_navigation_screen.dart';
-// import 'package:proyecto_flutter/screens/main_navigation_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -42,16 +40,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.fastfood, // Cambiar por la imagen del cliente
-              size: 100,
-              color: Colors.amber,
-            ),
+            Image.asset('assets/images/icon.png', height: 100, width: 120),
             SizedBox(height: 20),
             CircularProgressIndicator(),
             SizedBox(height: 10),

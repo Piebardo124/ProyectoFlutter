@@ -1,38 +1,163 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_flutter/models/user_model.dart';
 import 'package:proyecto_flutter/providers/auth_provider.dart';
 import 'package:proyecto_flutter/services/firestore_service.dart';
 import 'package:proyecto_flutter/screens/auth/login_screen.dart';
+import 'package:proyecto_flutter/screens/profile/edit_address_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState2();
+}
+
+class _ProfileScreenState2 extends State<ProfileScreen> {
+  final FirestoreService firestoreService = FirestoreService();
+  late Future<UserModel?> _userFuture;
+  String? _userId;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _userId = Provider.of<AuthProvider>(context, listen: false).user?.uid;
+    _loadUserData();
+  }
+
+  void _loadUserData() {
+    if (_userId != null) {
+      setState(() {
+        _userFuture = firestoreService.getUserData(_userId!);
+      });
+    }
+  }
+
+  Future<void> _showEditNameDialog(
+    BuildContext context,
+    UserModel currentUser,
+  ) async {
+    final nameController = TextEditingController(text: currentUser.displayName);
+
+    return showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('Actualizar Nombre'),
+          content: TextFormField(
+            controller: nameController,
+            decoration: const InputDecoration(labelText: 'Nombre'),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () => Navigator.of(ctx).pop(),
+            ),
+            ElevatedButton(
+              child: const Text('Guardar'),
+              onPressed: () async {
+                final newName = nameController.text.trim();
+                if (newName.isEmpty) return;
+
+                try {
+                  await firestoreService.updateUserData(_userId!, {
+                    'displayName': newName,
+                  });
+                  Navigator.of(ctx).pop();
+                  _loadUserData();
+                } catch (e) {
+                  Navigator.of(ctx).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error: ${e.toString()}'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showEditPhoneDialog(
+    BuildContext context,
+    UserModel currentUser,
+  ) async {
+    final phoneController = TextEditingController(text: currentUser.phone);
+    final GlobalKey<FormState> _dialogFormKey = GlobalKey<FormState>();
+
+    return showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('Actualizar Teléfono'),
+          content: TextFormField(
+            controller: phoneController,
+            keyboardType: TextInputType.phone,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(10),
+            ],
+            decoration: const InputDecoration(labelText: 'Teléfono'),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () => Navigator.of(ctx).pop(),
+            ),
+            ElevatedButton(
+              child: const Text('Guardar'),
+              onPressed: () async {
+                final newPhone = phoneController.text.trim();
+                try {
+                  await firestoreService.updateUserData(_userId!, {
+                    'phone': newPhone,
+                  });
+                  Navigator.of(ctx).pop();
+                  _loadUserData();
+                } catch (e) {
+                  Navigator.of(ctx).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error: ${e.toString()}'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final user = authProvider.user;
 
-    final firestoreService = FirestoreService();
-
-    if (user == null) {
+    if (_userId == null) {
       return const Scaffold(
         body: Center(child: Text('Error: No se pudo cargar el usuario.')),
       );
     }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Mi Perfil')),
       body: FutureBuilder<UserModel?>(
-        future: firestoreService.getUserData(user.uid),
+        future: _userFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
-
           if (!snapshot.hasData || snapshot.data == null) {
             return const Center(
               child: Text('No se encontraron datos del perfil.'),
@@ -41,7 +166,16 @@ class ProfileScreen extends StatelessWidget {
 
           final userModel = snapshot.data!;
 
-          // Mostramos la información del usuario
+          String displayAddress;
+          if (userModel.calle.isEmpty) {
+            displayAddress = '(Añadir dirección)';
+          } else {
+            String numero = userModel.numInt.isNotEmpty
+                ? userModel.numInt
+                : userModel.numExt;
+            displayAddress = '${userModel.calle} $numero';
+          }
+
           return Padding(
             padding: const EdgeInsets.all(24.0),
             child: ListView(
@@ -53,17 +187,14 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-
-                // Informacion del perfil
                 _buildProfileTile(
                   icon: Icons.person_outline,
                   title: 'Nombre',
-                  // Mostramos el email si el nombre está vacío
                   subtitle: userModel.displayName.isEmpty
                       ? '(Sin nombre)'
                       : userModel.displayName,
                   onTap: () {
-                    // Aquí podrías navegar a una pantalla para editar el nombre
+                    _showEditNameDialog(context, userModel);
                   },
                 ),
                 _buildProfileTile(
@@ -78,23 +209,29 @@ class ProfileScreen extends StatelessWidget {
                       ? '(Añadir teléfono)'
                       : userModel.phone,
                   onTap: () {
-                    // Aquí podrías navegar a una pantalla para editar el teléfono
+                    _showEditPhoneDialog(context, userModel);
                   },
                 ),
                 _buildProfileTile(
                   icon: Icons.location_on_outlined,
                   title: 'Dirección',
-                  subtitle: userModel.address.isEmpty
-                      ? '(Añadir dirección)'
-                      : userModel.address,
+                  subtitle: displayAddress,
                   onTap: () {
-                    // Aquí podrías navegar a una pantalla para editar la dirección
+                    Navigator.of(context)
+                        .push(
+                          MaterialPageRoute(
+                            builder: (context) => EditAddressScreen(
+                              currentUser: userModel,
+                              userId: _userId!,
+                            ),
+                          ),
+                        )
+                        .then((_) {
+                          _loadUserData();
+                        });
                   },
                 ),
-
                 const Divider(height: 40),
-
-                // Botton de cierre de sesion
                 ElevatedButton.icon(
                   icon: const Icon(Icons.logout),
                   label: const Text('Cerrar Sesión'),
@@ -105,9 +242,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   onPressed: () async {
                     await authProvider.signOut();
-
                     if (context.mounted) {
-                      // Regresar al Login y borrar el historial
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (context) => const LoginScreen(),

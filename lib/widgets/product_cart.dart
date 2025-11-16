@@ -19,8 +19,6 @@ class ProductCard extends StatelessWidget {
         children: [
           AspectRatio(
             aspectRatio: 16 / 10,
-            // Asumimos que product.imageUrl es la RUTA DEL ASSET
-            // ej: 'assets/images/burger_clasica.png'
             child: Image.asset(product.imageUrl, fit: BoxFit.cover),
           ),
           Padding(
