@@ -70,6 +70,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final logoAsset = isDarkMode
+        ? 'assets/images/logo_rudo.png'
+        : 'assets/images/icon.png';
+    final titleColor = isDarkMode ? Colors.grey[200] : Colors.grey[800];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Crear Cuenta'),
@@ -86,7 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             children: [
               const SizedBox(height: 20),
               // Logo
-              Image.asset('assets/images/icon.png', height: 100, width: 120),
+              Image.asset(logoAsset, height: 100, width: 120),
               const SizedBox(height: 20),
               Text(
                 'Únete a BurgerApp',
@@ -94,7 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[800],
+                  color: Theme.of(context).textTheme.headlineMedium?.color,
                 ),
               ),
               const SizedBox(height: 40),
@@ -157,17 +164,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
                       onPressed: _register,
                       child: const Text(
                         'Registrarse',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        style: TextStyle(fontSize: 18),
                       ),
                     ),
             ],

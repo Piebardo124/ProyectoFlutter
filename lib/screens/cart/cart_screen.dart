@@ -78,7 +78,6 @@ class CartScreen extends StatelessWidget {
             subtitle: Text(
               '\$${(item.price * item.quantity).toStringAsFixed(2)}',
             ),
-            // Botones para +/-/eliminar
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -114,13 +113,15 @@ class CartScreen extends StatelessWidget {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final firestoreService = FirestoreService();
 
+    final theme = Theme.of(context);
+
     return Container(
       padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
+            color: theme.shadowColor.withOpacity(0.15),
             spreadRadius: 2,
             blurRadius: 5,
             offset: const Offset(0, -3),
@@ -139,10 +140,10 @@ class CartScreen extends StatelessWidget {
               ),
               Text(
                 '\$${cart.totalPrice.toStringAsFixed(2)}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ],
@@ -152,14 +153,6 @@ class CartScreen extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
               onPressed: (cart.isLoading || cart.items.isEmpty)
                   ? null
                   : () {
@@ -172,7 +165,7 @@ class CartScreen extends StatelessWidget {
                       );
                     },
               child: cart.isLoading
-                  ? const CircularProgressIndicator(color: Colors.white)
+                  ? const CircularProgressIndicator()
                   : const Text(
                       'Realizar Pedido',
                       style: TextStyle(fontSize: 18),

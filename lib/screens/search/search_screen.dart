@@ -53,14 +53,17 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget _buildBody() {
     if (_searchController.text.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.search, size: 100, color: Colors.grey),
             Text(
               'Escribe para buscar una hamburguesa...',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 18,
+                color: Theme.of(context).textTheme.bodySmall?.color,
+              ),
             ),
           ],
         ),
@@ -68,14 +71,17 @@ class _SearchScreenState extends State<SearchScreen> {
     }
 
     if (_filteredProducts.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.sentiment_dissatisfied, size: 100, color: Colors.grey),
             Text(
               'No se encontraron resultados',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 18,
+                color: Theme.of(context).textTheme.bodySmall?.color,
+              ),
             ),
           ],
         ),

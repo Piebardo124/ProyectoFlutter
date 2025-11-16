@@ -57,6 +57,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final logoAsset = isDarkMode
+        ? 'assets/images/logo_rudo.png'
+        : 'assets/images/icon.png';
+    final titleColor = isDarkMode ? Colors.grey[200] : Colors.grey[800];
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -64,11 +71,10 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Form(
             key: _formKey,
             child: Column(
-              //mainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 60),
-                Image.asset('assets/images/icon.png', height: 100, width: 120),
+                Image.asset(logoAsset, height: 100, width: 120),
                 const SizedBox(height: 20),
                 Text(
                   'RING BURGER', // Nombre de tu restaurante
@@ -76,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
+                    color: Theme.of(context).textTheme.headlineMedium?.color,
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -122,18 +128,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors
-                              .deepPurple, // Color principal de app (modificar)
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
                         onPressed: _signIn,
                         child: const Text(
                           'Iniciar Sesión',
-                          style: TextStyle(fontSize: 18, color: Colors.white),
+                          style: TextStyle(fontSize: 18),
                         ),
                       ),
                 const SizedBox(height: 20),

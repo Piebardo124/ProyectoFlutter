@@ -40,12 +40,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+    final logoAsset = isDarkMode
+        ? 'assets/images/logo_rudo.png'
+        : 'assets/images/icon.png';
+
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/icon.png', height: 100, width: 120),
+            Image.asset(logoAsset, height: 100, width: 120),
             SizedBox(height: 20),
             CircularProgressIndicator(),
             SizedBox(height: 10),

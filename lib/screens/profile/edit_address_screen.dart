@@ -120,14 +120,9 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
               _buildTextField(_estadoController, 'Estado'),
               const SizedBox(height: 30),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
                 onPressed: _isLoading ? null : _saveAddress,
                 child: _isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
+                    ? const CircularProgressIndicator()
                     : const Text(
                         'Guardar Dirección',
                         style: TextStyle(fontSize: 18),

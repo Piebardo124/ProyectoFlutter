@@ -56,19 +56,13 @@ class ProductCard extends StatelessWidget {
               children: [
                 Text(
                   '\$${product.price.toStringAsFixed(2)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.deepPurple,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
-                    foregroundColor: Colors.white,
-                    shape: const CircleBorder(),
-                    padding: const EdgeInsets.all(8),
-                  ),
                   onPressed: () {
                     final cart = Provider.of<CartProvider>(
                       context,

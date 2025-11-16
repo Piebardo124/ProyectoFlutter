@@ -47,13 +47,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Recuperar Contraseña'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Colors.grey[800],
-      ),
+      appBar: AppBar(title: const Text('Recuperar Contraseña')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(32.0),
         child: Form(
@@ -71,14 +67,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[800],
+                  color: theme.textTheme.bodyMedium?.color,
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: theme.textTheme.bodyMedium?.color,
+                ),
               ),
               const SizedBox(height: 40),
 
@@ -104,17 +103,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
                       onPressed: _sendResetEmail,
                       child: const Text(
                         'Enviar Email de Recuperación',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        style: TextStyle(fontSize: 18),
                       ),
                     ),
             ],
